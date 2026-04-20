@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from .models import Item
 import stripe
+from PaymentSystem.settings import STRIPE_SECRET_KEY
 
 def item_view(request, pk):
     item = get_object_or_404(Item, pk=pk)
@@ -10,8 +11,7 @@ def item_view(request, pk):
 
 def buy_view(request, pk):
     item = get_object_or_404(Item, pk=pk)
-    print(item)
-    stripe.api_key = "sk_test_51TOCcq85B5ewcsD1PYWLnx6eaRymu1eLcZ2ScErigptMLqFyyshbPF07q7JLXgjh9i9DhYG8wVMe3wZkijfm4HJg00ey6Pm2yK"
+    stripe.api_key = STRIPE_SECRET_KEY
     session = stripe.checkout.Session.create(
         line_items=[{
             'price_data': {
@@ -28,5 +28,4 @@ def buy_view(request, pk):
         success_url='http://127.0.0.1:8000/item/' + str(pk),
         cancel_url='http://127.0.0.1:8000/item/'  + str(pk),
     )
-    print(session)
     return JsonResponse({'session_id' : session.id})
