@@ -1,22 +1,22 @@
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
-from .models import Item
+from .models import Item, Order, OrderItem
 import stripe
 from django.conf import settings
 
 def item_view(request, pk):
     item = get_object_or_404(Item, pk=pk)
     context = {'item' : item}
-    return render(request, 'index.html', context)
+    return render(request, 'item.html', context)
 
-def buy_view(request, pk):
+def buy_item(request, pk):
     item = get_object_or_404(Item, pk=pk)
     stripe.api_key = settings.STRIPE_SECRET_KEY
     session = stripe.checkout.Session.create(
         line_items=[{
             'price_data': {
                 'currency': 'rub',
-                'unit_amount': int(item.price * 100),  # в копейки!
+                'unit_amount': int(item.price * 100),
                 'product_data': {
                     'name': item.name,
                     'description': item.description,
@@ -28,4 +28,44 @@ def buy_view(request, pk):
         success_url='http://127.0.0.1:8000/item/' + str(pk),
         cancel_url='http://127.0.0.1:8000/item/'  + str(pk),
     )
-    return JsonResponse({'session_id' : session.id})
+    return JsonResponse({'session_id': session.id})
+
+def order_view(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    context = {'order' : order}
+    return render(request, 'order.html', context)
+
+def buy_order(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    order_items = OrderItem.objects.filter(order=order)
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+
+    line_items = []
+    for item in order_items:
+        line_item = {
+            'price_data': {
+                'currency': 'rub',
+                'unit_amount': int(item.item.price * 100),
+                'product_data': {
+                    'name': item.item.name,
+                    'description': item.item.description,
+                },
+            },
+            'quantity': item.quantity,
+        }
+        if order.tax and order.tax.stripe_id:
+            line_item['tax_rates'] = [order.tax.stripe_id]
+        line_items.append(line_item)
+
+    session_params = {
+        'line_items': line_items,
+        'mode': 'payment',
+        'success_url': 'http://127.0.0.1:8000/item/' + str(pk),
+        'cancel_url': 'http://127.0.0.1:8000/item/' + str(pk),
+    }
+
+    if order.discount and order.discount.stripe_id:
+        session_params['discounts'] = [{'coupon': order.discount.stripe_id}]
+
+    session = stripe.checkout.Session.create(**session_params)
+    return JsonResponse({'session_id': session.id})
