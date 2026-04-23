@@ -34,10 +34,6 @@
             {% if order.discount %}<div class="text-success mb-2">Скидка {{ order.discount.percentage }}% — {{ order.discount.name }}</div>{% endif %}
             {% if order.tax %}<div class="text-danger mb-3">Налог {{ order.tax.percentage }}% — {{ order.tax.name }}</div>{% endif %}
 
-            <div class="text-center my-5">
-                <span class="total-price">{{ order.total_price|floatformat:0 }} <span class="fs-4 fw-normal text-muted">руб.</span></span>
-            </div>
-
             <button id="buy-button" class="btn btn-buy" data-id="{{ order.id }}">
                 💳 Оплатить заказ
             </button>
