@@ -31,6 +31,17 @@
 - **Контейнеризация**: Docker + docker-compose
 - **Frontend**: Bootstrap 5 + vanilla JavaScript
 
+
+## Креды от админки
+
+Логин: furasfast
+Пароль: 0000
+В админке удобно добавлять товары, заказы, скидки и налоги.
+
+## Ссылка на сайт
+
+https://paymentsystem-xlvo.onrender.com/
+
 ## 🚀 Быстрый запуск
 
 ### 1. Локально (без Docker)
@@ -65,21 +76,3 @@ docker compose up
 docker compose down
 ```
 
-## Креды от админки
-
-Логин: furasfast
-Пароль: 0000
-В админке удобно добавлять товары, заказы, скидки и налоги.
-
-Структура проекта
-textPaymentSystem/                  ← корень репозитория
-├── PaymentSystem/              ← Django проект
-│   ├── config/                 ← настройки
-│   ├── items/                  ← основное приложение
-│   ├── templates/
-│   ├── manage.py
-│   ├── Dockerfile
-│   ├── .env.example
-│   └── db.sqlite3              ← демо-база
-├── docker-compose.yml
-└── README.md
