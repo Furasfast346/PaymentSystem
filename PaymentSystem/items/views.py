@@ -6,7 +6,10 @@ from django.conf import settings
 
 def item_view(request, pk):
     item = get_object_or_404(Item, pk=pk)
-    context = {'item' : item}
+    context = {
+        'item': item,
+        'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
+    }
     return render(request, 'item.html', context)
 
 def buy_item(request, pk):
@@ -32,7 +35,10 @@ def buy_item(request, pk):
 
 def order_view(request, pk):
     order = get_object_or_404(Order, pk=pk)
-    context = {'order' : order}
+    context = {
+        'order': order,
+        'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
+    }
     return render(request, 'order.html', context)
 
 def buy_order(request, pk):
@@ -60,8 +66,8 @@ def buy_order(request, pk):
     session_params = {
         'line_items': line_items,
         'mode': 'payment',
-        'success_url': 'http://127.0.0.1:8000/item/' + str(pk),
-        'cancel_url': 'http://127.0.0.1:8000/item/' + str(pk),
+        'success_url': 'http://127.0.0.1:8000/order/' + str(pk),
+        'cancel_url': 'http://127.0.0.1:8000/order/' + str(pk),
     }
 
     if order.discount and order.discount.stripe_id:
@@ -69,3 +75,12 @@ def buy_order(request, pk):
 
     session = stripe.checkout.Session.create(**session_params)
     return JsonResponse({'session_id': session.id})
+
+def index_view(request):
+    items = Item.objects.all()
+    orders = Order.objects.all()
+    return render(request, 'index.html', {
+        'items': items,
+        'orders': orders,
+        'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
+    })
