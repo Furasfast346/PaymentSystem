@@ -28,9 +28,10 @@ def buy_item(request, pk):
             'quantity': 1,
         }],
         mode='payment',
-        success_url='http://127.0.0.1:8000',
-        cancel_url='http://127.0.0.1:8000',
+        success_url=request.build_absolute_uri('/').rstrip('/'),
+        cancel_url=request.build_absolute_uri('/').rstrip('/'),
     )
+    print(request.build_absolute_uri)
     return JsonResponse({'session_id': session.id})
 
 def order_view(request, pk):
@@ -66,8 +67,8 @@ def buy_order(request, pk):
     session_params = {
         'line_items': line_items,
         'mode': 'payment',
-        'success_url': 'http://127.0.0.1:8000',
-        'cancel_url': 'http://127.0.0.1:8000',
+        'success_url': request.build_absolute_uri('/').rstrip('/'),
+        'cancel_url': request.build_absolute_uri('/').rstrip('/'),
     }
 
     if order.discount and order.discount.stripe_id:
