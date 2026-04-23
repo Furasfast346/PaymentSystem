@@ -28,8 +28,8 @@ def buy_item(request, pk):
             'quantity': 1,
         }],
         mode='payment',
-        success_url='http://127.0.0.1:8000/item/' + str(pk),
-        cancel_url='http://127.0.0.1:8000/item/'  + str(pk),
+        success_url='http://127.0.0.1:8000',
+        cancel_url='http://127.0.0.1:8000',
     )
     return JsonResponse({'session_id': session.id})
 
@@ -66,8 +66,8 @@ def buy_order(request, pk):
     session_params = {
         'line_items': line_items,
         'mode': 'payment',
-        'success_url': 'http://127.0.0.1:8000/order/' + str(pk),
-        'cancel_url': 'http://127.0.0.1:8000/order/' + str(pk),
+        'success_url': 'http://127.0.0.1:8000',
+        'cancel_url': 'http://127.0.0.1:8000',
     }
 
     if order.discount and order.discount.stripe_id:

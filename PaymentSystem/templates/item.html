@@ -74,7 +74,7 @@
             buyButton.innerHTML = '⏳ Обрабатываем...';
 
             try {
-                const response = await fetch(`/buy/${itemId}`, { method: 'GET' });
+                const response = await fetch(`/buy-item/${itemId}`, { method: 'GET' });
 
                 if (!response.ok) {
                     const err = await response.json();
