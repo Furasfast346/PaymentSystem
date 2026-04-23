@@ -59,6 +59,7 @@ cp PaymentSystem/.env.example PaymentSystem/.env
 docker compose up
 ```
 Открывай: http://localhost:8000
+
 Остановить контейнеры:
 ```bash
 docker compose down
