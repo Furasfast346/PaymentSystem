@@ -55,7 +55,7 @@ source venv/bin/activate          # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
 cp .env.example .env
-# Открой PaymentSystem/.env и вставь свои тестовые ключи Stripe
+# Открой PaymentSystem/.env и вставь свои тестовые ключи Stripe или используй мои
 
 python manage.py migrate
 python manage.py createsuperuser
